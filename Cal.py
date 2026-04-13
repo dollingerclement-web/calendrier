@@ -70,7 +70,7 @@ if st.button("➕ Ajouter réservation"):
 
     if len(dates) == 2 and nom:
 
-        sheet.append_row([nom, str(dates[0]),str(dates[1]),nb_ad,nb_en,couleur])
+        sheet.append_row([nom, str(dates[0]),str(dates[1]),nb_pers,nb_ad,nb_en,couleur])
 
         st.success("✅ Réservation ajoutée !")
         st.cache_data.clear()
