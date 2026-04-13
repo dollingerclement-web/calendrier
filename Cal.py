@@ -140,9 +140,9 @@ calendar(events=calendar_events, options=calendar_options)
 
 st.markdown("---")
 st.subheader("📊 Tableau")
-
-if not df.empty:
-    df_display = df.copy()
+df_filtered = df[pd.to_datetime(df["Fin"]).dt.date >= today]
+if not df_filtered.empty:
+    df_display = df_filtered.copy()
 
     df_display["Début"] = pd.to_datetime(df_display["Début"]).dt.strftime("%d/%m/%Y")
     df_display["Fin"] = pd.to_datetime(df_display["Fin"]).dt.strftime("%d/%m/%Y")
