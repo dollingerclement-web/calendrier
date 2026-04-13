@@ -157,7 +157,7 @@ if not df.empty:
 
 if "confirm_delete" in st.session_state:
 
-    st.warning("⚠️ Êtes-vous sûr de vouloir supprimer cette réservation ?")
+    st.warning("⚠️ Êtes-vous sûr de vouloir supprimer la réservation de  ?"+ f"{row['Membre']} ({pd.to_datetime(row['Début']).strftime('%d/%m/%Y')} → {pd.to_datetime(row['Fin']).strftime('%d/%m/%Y')})")
 
     col1, col2 = st.columns(2)
 
