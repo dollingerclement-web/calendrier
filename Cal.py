@@ -121,7 +121,7 @@ calendar(events=calendar_events, options=calendar_options)
 # ------------------ FORMAT FR ------------------
 
 st.markdown("---")
-st.subheader("📊 Séjour à venir")
+st.subheader("📊 Séjours à venir")
 
 #ne garder dans le tableau que les séjours à venir
 if not df.empty and "Fin" in df.columns:
