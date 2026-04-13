@@ -57,25 +57,7 @@ with st.sidebar:
     if st.button("Ajouter"):
         if len(dates) == 2 and nom:
             
-            # 🔥 Vérification des conflits
-            conflit = False
-            for _, row in df.iterrows():
-                debut_exist = pd.to_datetime(row["Début"]).date()
-                fin_exist = pd.to_datetime(row["Fin"]).date()
-
-                if not (dates[1] < debut_exist or dates[0] > fin_exist):
-                    conflit = True
-                    break
-
-           
-            else:
-                sheet.append_row([
-                    nom,
-                    str(dates[0]),
-                    str(dates[1]),
-                    nb_pers,
-                    couleur
-                ])
+           sheet.append_row( nom, str(dates[0]),str(dates[1]), nb_pers,couleur])
                 st.success("✅ Réservation ajoutée !")
                 st.cache_data.clear()
 
