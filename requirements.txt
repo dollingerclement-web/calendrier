@@ -1,4 +1,4 @@
 streamlit
 streamlit-calendar
 gspread
-oauth2client.service_account
+oauth2client
