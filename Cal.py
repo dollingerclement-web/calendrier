@@ -67,8 +67,7 @@ with st.sidebar:
                     conflit = True
                     break
 
-            if conflit:
-                st.error("⚠️ Conflit avec une réservation existante !")
+           
             else:
                 sheet.append_row([
                     nom,
