@@ -72,6 +72,7 @@ if st.button("➕ Ajouter réservation"):
 
         sheet.append_row([nom, str(dates[0]),str(dates[1]),nb_pers,nb_ad,nb_en,couleur])
         st.session_state["focus_date"] = dates[0]
+        st.session_state["calendar_key"] = str(dates[0])
         st.success("✅ Réservation ajoutée !")
         st.cache_data.clear()
         st.rerun()
@@ -121,7 +122,7 @@ if not df.empty:
             "borderColor": row["Couleur"],
             "textColor": "#000000",
             "allDay": True,
-            "initialDate": st.session_state.get("focus_date", today).isoformat()
+            
         })
 
 calendar_options = {
@@ -132,7 +133,9 @@ calendar_options = {
     },
     "initialView": "dayGridMonth",
     "eventDisplay": "block",
-    "eventOverlap": True
+    "eventOverlap": True,
+    "initialDate": st.session_state.get("focus_date", today).isoformat()
+    
 }
 
 calendar(events=calendar_events, options=calendar_options)
