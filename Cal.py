@@ -17,7 +17,7 @@ def connect_sheet():
     ]
     
     creds = ServiceAccountCredentials.from_json_keyfile_dict(
-        st.secrets["gcp_service_account"], scope
+        st.secrets["CHIROUZE"], scope
     )
     
     client = gspread.authorize(creds)
