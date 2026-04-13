@@ -41,15 +41,20 @@ today = pd.Timestamp.today().date()
 
 st.subheader("📝 Nouvelle réservation")
 
-col1, col2, col3 = st.columns(3)
+col1, col2, col3,col4 = st.columns(3)
 
 with col1:
     nom = st.text_input("Nom")
 
 with col2:
-    nb_pers = st.number_input("Personnes", 1, 15, 2)
-
+    nb_ad = st.number_input("Adultes actifs", 1, 15, 2)
+    
 with col3:
+    nb_en = st.number_input("Enfants", 1, 15, 2)
+
+nb_pers=nb_as+nb_en
+
+with col4:
     couleur = st.color_picker("Couleur", "#3D91FF")
 
 dates = st.date_input( "Dates du séjour", value=(today, today))
