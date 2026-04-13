@@ -57,9 +57,9 @@ with st.sidebar:
     if st.button("Ajouter"):
         if len(dates) == 2 and nom:
             
-           sheet.append_row( nom, str(dates[0]),str(dates[1]), nb_pers,couleur])
-                st.success("✅ Réservation ajoutée !")
-                st.cache_data.clear()
+           sheet.append_row( [nom, str(dates[0]),str(dates[1]), nb_pers,couleur])
+           st.success("✅ Réservation ajoutée !")
+           st.cache_data.clear()
 
         else:
             st.error("Veuillez remplir tous les champs")
