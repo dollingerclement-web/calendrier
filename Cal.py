@@ -6,7 +6,7 @@ from streamlit_calendar import calendar
 
 st.set_page_config(layout="wide")
 st.title("🏡 Planning de la chirouze")
-st.info("Avant toute réservation merci d'envoyer une demande sur le groupe whats'app : priorité à la famille et aux anciens ;)")
+st.info("Avant toute réservation on oublie pas de faire une demande sur le groupe whats'app (priorité à la famille et aux anciens). Et on passe un petit coup de téléphone à Papou")
 
 # ------------------ CONNEXION GOOGLE SHEETS ------------------
 
@@ -73,7 +73,7 @@ if st.button("➕ Ajouter réservation"):
         sheet.append_row([nom, str(dates[0]),str(dates[1]),nb_pers,nb_ad,nb_en,couleur])
         st.session_state["focus_date"] = dates[0]
         st.session_state["calendar_key"] = str(dates[0])
-        st.success("✅ Réservation ajoutée !")
+        st.success("✅ Réservation ajoutée ! A bientôt à la chirouze ! ")
         st.cache_data.clear()
         st.rerun()
 
