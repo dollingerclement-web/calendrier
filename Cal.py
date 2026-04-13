@@ -153,7 +153,24 @@ if not df.empty:
 
     with colA:
         if st.button("❌ Supprimer"):
-            sheet.delete_rows(index + 2)
-            st.success("Supprimé")
+            st.session_state["confirm_delete"] = index
+
+if "confirm_delete" in st.session_state:
+
+    st.warning("⚠️ Êtes-vous sûr de vouloir supprimer cette réservation ?")
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+        if st.button("✅ Oui, supprimer"):
+            sheet.delete_rows(st.session_state["confirm_delete"] + 2)
+            st.success("Réservation supprimée")
+            del st.session_state["confirm_delete"]
             st.cache_data.clear()
+            st.rerun()
+
+    with col2:
+        if st.button("❌ Annuler"):
+            del st.session_state["confirm_delete"]
+            st.info("Suppression annulée")
 
