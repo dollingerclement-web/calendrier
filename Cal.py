@@ -4,7 +4,7 @@ from streamlit_calendar import calendar
 
 st.set_page_config(layout="wide") # Mode large pour mieux voir le calendrier
 st.title("🏡 Gestion de la Maison Familiale")
-
+today = pd.Timestamp.today().date()
 # --- SIMULATION DE BASE DE DONNÉES ---
 if 'reservations' not in st.session_state:
     # On ajoute une colonne 'Personnes' et 'Couleur'
@@ -15,7 +15,7 @@ with st.sidebar:
     st.header("📝 Réserver un séjour")
     nom = st.text_input("Nom de la famille / Personne")
     nb_pers = st.number_input("Nombre de personnes", min_value=1, max_value=15, value=2)
-    dates = st.date_input("Dates du séjour", value=pd.Timestamp.today().date(), num_months=2)
+    dates = st.date_input("Dates du séjour", value=[today,today].date(), num_months=2)
     couleur = st.color_picker("Choisissez une couleur pour le calendrier", "#3D91FF")
     
     if st.button("Ajouter au calendrier"):
