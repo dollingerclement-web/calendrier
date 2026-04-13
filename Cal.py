@@ -41,7 +41,7 @@ today = pd.Timestamp.today().date()
 
 st.subheader("📝 Nouvelle réservation")
 
-col1, col2, col3,col4 = st.columns(3)
+col1, col2, col3,col4 = st.columns(4)
 
 with col1:
     nom = st.text_input("Nom")
