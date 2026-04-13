@@ -79,6 +79,7 @@ if st.button("➕ Ajouter réservation"):
 
         st.success("✅ Réservation ajoutée !")
         st.cache_data.clear()
+        st.rerun()
 
     else:
         st.error("Veuillez remplir tous les champs")
