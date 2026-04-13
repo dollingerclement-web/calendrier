@@ -52,12 +52,11 @@ with col2:
 with col3:
     couleur = st.color_picker("Couleur", "#3D91FF")
 
-dates = st.date_input(
-    "Dates du séjour",
-    value=(today, today),
-    min_value=today,
-    max_value=today + pd.Timedelta(days=365)
-)
+dates = st.date_input( "Dates du séjour", value=(today, today))
+
+if len(dates) == 2:
+    st.write("📅 Période choisie :", dates[0].strftime("%d/%m/%Y"), "→",dates[1].strftime("%d/%m/%Y"))
+
 
 # ------------------ AJOUT ------------------
 
