@@ -15,7 +15,7 @@ with st.sidebar:
     st.header("📝 Réserver un séjour")
     nom = st.text_input("Nom de la famille / Personne")
     nb_pers = st.number_input("Nombre de personnes", min_value=1, max_value=15, value=2)
-    dates = st.date_input("Dates du séjour", value=pd.Timestamp.today(), num_months=2)
+    dates = st.date_input("Dates du séjour", value=pd.Timestamp.today().date(), num_months=2)
     couleur = st.color_picker("Choisissez une couleur pour le calendrier", "#3D91FF")
     
     if st.button("Ajouter au calendrier"):
