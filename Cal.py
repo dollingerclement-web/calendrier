@@ -83,7 +83,8 @@ if st.button("➕ Ajouter réservation"):
 # ------------------ ÉDITION / SUPPRESSION ------------------
 
 st.markdown("---")
-st.subheader("✏️ Gérer les réservations")
+st.subheader("✏️ Oups je me suis trompé (je suprime ma réservation)")
+st.caption("Attention à ne pas suprimer les séjours des autres ;)")
 
 if not df.empty:
 
