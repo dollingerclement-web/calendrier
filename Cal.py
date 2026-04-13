@@ -80,29 +80,6 @@ if st.button("➕ Ajouter réservation"):
     else:
         st.error("Veuillez remplir tous les champs")
 
-# ------------------ ÉDITION / SUPPRESSION ------------------
-
-st.markdown("---")
-st.subheader("✏️ Oups je me suis trompé (je suprime ma réservation)")
-st.caption("Attention à ne pas suprimer les séjours des autres ;)")
-
-if not df.empty:
-
-    options = df.apply(
-        lambda row: f"{row['Membre']} ({pd.to_datetime(row['Début']).strftime('%d/%m/%Y')} → {pd.to_datetime(row['Fin']).strftime('%d/%m/%Y')})",
-        axis=1
-    )
-
-    selected = st.selectbox("Réservation", options)
-    index = options[options == selected].index[0]
-
-    colA, colB = st.columns(2)
-
-    with colA:
-        if st.button("❌ Supprimer"):
-            sheet.delete_rows(index + 2)
-            st.success("Supprimé")
-            st.cache_data.clear()
 
 
 # ------------------ CALENDRIER ------------------
@@ -155,3 +132,28 @@ if not df_filtered.empty:
     st.dataframe(df_display, use_container_width=True)
 else:
     st.info("Aucune réservation")
+
+# ------------------ ÉDITION / SUPPRESSION ------------------
+
+st.markdown("---")
+st.subheader("✏️ Oups je me suis trompé (je suprime ma réservation)")
+st.caption("Attention à ne pas suprimer les séjours des autres ;)")
+
+if not df.empty:
+
+    options = df.apply(
+        lambda row: f"{row['Membre']} ({pd.to_datetime(row['Début']).strftime('%d/%m/%Y')} → {pd.to_datetime(row['Fin']).strftime('%d/%m/%Y')})",
+        axis=1
+    )
+
+    selected = st.selectbox("Réservation", options)
+    index = options[options == selected].index[0]
+
+    colA, colB = st.columns(2)
+
+    with colA:
+        if st.button("❌ Supprimer"):
+            sheet.delete_rows(index + 2)
+            st.success("Supprimé")
+            st.cache_data.clear()
+
