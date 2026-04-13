@@ -121,8 +121,13 @@ calendar(events=calendar_events, options=calendar_options)
 # ------------------ FORMAT FR ------------------
 
 st.markdown("---")
-st.subheader("📊 Tableau")
-df_filtered = df[pd.to_datetime(df["Fin"]).dt.date >= today]
+st.subheader("📊 Séjour à venir")
+
+#ne garder dans le tableau que les séjours à venir
+if not df.empty and "Fin" in df.columns:
+    df_filtered = df[pd.to_datetime(df["Fin"]).dt.date >= today]
+else:
+    df_filtered = pd.DataFrame()
 if not df_filtered.empty:
     df_display = df_filtered.copy()
 
