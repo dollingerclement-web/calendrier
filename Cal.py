@@ -15,18 +15,18 @@ def connect_sheet():
         "https://spreadsheets.google.com/feeds",
         "https://www.googleapis.com/auth/drive"
     ]
-    
+
     creds = ServiceAccountCredentials.from_json_keyfile_dict(
         st.secrets["CHIROUZE"], scope
     )
-    
+
     client = gspread.authorize(creds)
     sheet = client.open("Reservations maison").sheet1
     return sheet
 
 sheet = connect_sheet()
 
-# ------------------ LECTURE DES DONNÉES ------------------
+# ------------------ CHARGEMENT DONNÉES ------------------
 
 @st.cache_data(ttl=5)
 def load_data():
@@ -35,105 +35,90 @@ def load_data():
 
 df = load_data()
 
-# ------------------ FORMULAIRE ------------------
-
 today = pd.Timestamp.today().date()
 
-with st.sidebar:
-    st.header("📝 Réserver un séjour")
-    
-    nom = st.text_input("Nom")
-    nb_pers = st.number_input("Nombre de personnes", 1, 15, 2)
-    
-    dates = st.date_input(
-        "Dates du séjour",
-        value=(today, today),
-        min_value=today,
-        max_value=today + pd.Timedelta(days=365)
-    )
-    
-    couleur = st.color_picker("Couleur", "#3D91FF")
+# ------------------ FORMULAIRE PRINCIPAL ------------------
 
-    if st.button("Ajouter"):
-        if len(dates) == 2 and nom:
-            
-           sheet.append_row( [nom, str(dates[0]),str(dates[1]), nb_pers,couleur])
-           st.success("✅ Réservation ajoutée !")
-           st.cache_data.clear()
+st.subheader("📝 Nouvelle réservation")
 
-        else:
-            st.error("Veuillez remplir tous les champs")
-
-
-
-# ------------------ CALENDRIER ------------------
-
-calendar_events = []
-
-if not df.empty:
-    for _, row in df.iterrows():
-        calendar_events.append({
-            "title": f"{row['Membre']} ({row['Personnes']} pers.)",
-            "start": pd.to_datetime(row["Début"]).date().isoformat(),
-            "end": (pd.to_datetime(row["Fin"]).date() + pd.Timedelta(days=1)).isoformat(),
-            "backgroundColor": row["Couleur"],
-            "borderColor": row["Couleur"],
-            "textColor": "#FFFFFF",
-            "allDay": True
-        })
-
-col1, col2 = st.columns([3, 1])
+col1, col2, col3 = st.columns(3)
 
 with col1:
-    st.subheader("📅 Planning")
-    
-    calendar_options = {
-        "headerToolbar": {
-            "left": "prev,next today",
-            "center": "title",
-            "right": "dayGridMonth"
-        },
-        "initialView": "dayGridMonth",
-    }
-
-    calendar(events=calendar_events, options=calendar_options)
+    nom = st.text_input("Nom")
 
 with col2:
-    st.subheader("📊 Résumé")
+    nb_pers = st.number_input("Personnes", 1, 15, 2)
 
-    if not df.empty:
-        st.write(f"Total réservations : {len(df)}")
-        st.dataframe(df, use_container_width=True)
-    else:
-        st.info("Aucune réservation")
+with col3:
+    couleur = st.color_picker("Couleur", "#3D91FF")
 
-st.markdown("---")
-st.subheader("✏️ Modifier / Supprimer")
+dates = st.date_input(
+    "Dates du séjour",
+    value=(today, today),
+    min_value=today,
+    max_value=today + pd.Timedelta(days=365)
+)
 
-if not df.empty:
-    options = df.apply(lambda row: f"{row['Membre']} ({row['Début']} → {row['Fin']})", axis=1)
-    selected = st.selectbox("Choisir une réservation", options)
+# ------------------ AJOUT ------------------
 
-    index = options[options == selected].index[0]
+if st.button("➕ Ajouter réservation"):
 
-    if st.button("❌ Supprimer"):
-        sheet.delete_rows(index + 2)  # +2 car header + index 0
-        st.success("Supprimé !")
+    if len(dates) == 2 and nom:
+
+        sheet.append_row([
+            nom,
+            str(dates[0]),
+            str(dates[1]),
+            nb_pers,
+            couleur
+        ])
+
+        st.success("✅ Réservation ajoutée !")
         st.cache_data.clear()
 
-    if st.button("✏️ Modifier"):
-        st.session_state.edit_index = index
+    else:
+        st.error("Veuillez remplir tous les champs")
+
+# ------------------ ÉDITION / SUPPRESSION ------------------
+
+st.markdown("---")
+st.subheader("✏️ Gérer les réservations")
+
+if not df.empty:
+
+    options = df.apply(
+        lambda row: f"{row['Membre']} ({pd.to_datetime(row['Début']).strftime('%d/%m/%Y')} → {pd.to_datetime(row['Fin']).strftime('%d/%m/%Y')})",
+        axis=1
+    )
+
+    selected = st.selectbox("Réservation", options)
+    index = options[options == selected].index[0]
+
+    colA, colB = st.columns(2)
+
+    with colA:
+        if st.button("❌ Supprimer"):
+            sheet.delete_rows(index + 2)
+            st.success("Supprimé")
+            st.cache_data.clear()
+
+    with colB:
+        if st.button("✏️ Modifier"):
+            st.session_state.edit_index = index
+
+# ------------------ ÉDITION ------------------
 
 if "edit_index" in st.session_state:
+
     i = st.session_state.edit_index
     row = df.iloc[i]
 
-    st.sidebar.markdown("### ✏️ Édition")
+    st.markdown("### ✏️ Modification")
 
-    new_nom = st.sidebar.text_input("Nom", row["Membre"])
-    new_nb = st.sidebar.number_input("Personnes", 1, 15, int(row["Personnes"]))
+    new_nom = st.text_input("Nom", row["Membre"])
+    new_nb = st.number_input("Personnes", 1, 15, int(row["Personnes"]))
 
-    new_dates = st.sidebar.date_input(
+    new_dates = st.date_input(
         "Dates",
         value=(
             pd.to_datetime(row["Début"]).date(),
@@ -141,8 +126,10 @@ if "edit_index" in st.session_state:
         )
     )
 
-    if st.sidebar.button("💾 Enregistrer"):
+    if st.button("💾 Enregistrer"):
+
         sheet.delete_rows(i + 2)
+
         sheet.insert_row([
             new_nom,
             str(new_dates[0]),
@@ -151,6 +138,54 @@ if "edit_index" in st.session_state:
             row["Couleur"]
         ], i + 2)
 
-        st.success("Modifié !")
+        st.success("Modifié")
         del st.session_state.edit_index
         st.cache_data.clear()
+
+# ------------------ CALENDRIER ------------------
+
+st.markdown("---")
+st.subheader("📅 Planning")
+
+calendar_events = []
+
+if not df.empty:
+    for _, row in df.iterrows():
+
+        calendar_events.append({
+            "title": f"{row['Membre']} ({row['Personnes']} pers.)",
+            "start": pd.to_datetime(row["Début"]).date().isoformat(),
+            "end": (pd.to_datetime(row["Fin"]).date() + pd.Timedelta(days=1)).isoformat(),
+            "backgroundColor": row["Couleur"],
+            "borderColor": row["Couleur"],
+            "textColor": "#000000",
+            "allDay": True
+        })
+
+calendar_options = {
+    "headerToolbar": {
+        "left": "prev,next today",
+        "center": "title",
+        "right": "dayGridMonth"
+    },
+    "initialView": "dayGridMonth",
+    "eventDisplay": "block",
+    "eventOverlap": True
+}
+
+calendar(events=calendar_events, options=calendar_options)
+
+# ------------------ FORMAT FR ------------------
+
+st.markdown("---")
+st.subheader("📊 Tableau")
+
+if not df.empty:
+    df_display = df.copy()
+
+    df_display["Début"] = pd.to_datetime(df_display["Début"]).dt.strftime("%d/%m/%Y")
+    df_display["Fin"] = pd.to_datetime(df_display["Fin"]).dt.strftime("%d/%m/%Y")
+
+    st.dataframe(df_display, use_container_width=True)
+else:
+    st.info("Aucune réservation")
