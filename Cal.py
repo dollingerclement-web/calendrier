@@ -157,7 +157,7 @@ if not df.empty:
 
 if "confirm_delete" in st.session_state:
 
-    st.warning("⚠️ Êtes-vous sûr de vouloir supprimer la réservation de  ?"+ str(selected))
+    st.warning("⚠️ Êtes-vous sûr de vouloir supprimer la réservation de  "+ str(selected))
 
     col1, col2 = st.columns(2)
 
