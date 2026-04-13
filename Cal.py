@@ -101,45 +101,6 @@ if not df.empty:
             st.success("Supprimé")
             st.cache_data.clear()
 
-    with colB:
-        if st.button("✏️ Modifier"):
-            st.session_state.edit_index = index
-
-# ------------------ ÉDITION ------------------
-
-if "edit_index" in st.session_state:
-
-    i = st.session_state.edit_index
-    row = df.iloc[i]
-
-    st.markdown("### ✏️ Modification")
-
-    new_nom = st.text_input("Nom", row["Membre"])
-    new_nb = st.number_input("Personnes", 1, 15, int(row["Personnes"]))
-
-    new_dates = st.date_input(
-        "Dates",
-        value=(
-            pd.to_datetime(row["Début"]).date(),
-            pd.to_datetime(row["Fin"]).date()
-        )
-    )
-
-    if st.button("💾 Enregistrer"):
-
-        sheet.delete_rows(i + 2)
-
-        sheet.insert_row([
-            new_nom,
-            str(new_dates[0]),
-            str(new_dates[1]),
-            new_nb,
-            row["Couleur"]
-        ], i + 2)
-
-        st.success("Modifié")
-        del st.session_state.edit_index
-        st.cache_data.clear()
 
 # ------------------ CALENDRIER ------------------
 
