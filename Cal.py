@@ -6,7 +6,7 @@ from streamlit_calendar import calendar
 
 st.set_page_config(layout="wide")
 st.title("🏡 Gestion de la Maison Familiale")
-st.write(st.secrets)
+
 # ------------------ CONNEXION GOOGLE SHEETS ------------------
 
 @st.cache_resource
@@ -82,6 +82,49 @@ with st.sidebar:
         else:
             st.error("Veuillez remplir tous les champs")
 
+
+
+# ------------------ CALENDRIER ------------------
+
+calendar_events = []
+
+if not df.empty:
+    for _, row in df.iterrows():
+        calendar_events.append({
+            "title": f"{row['Membre']} ({row['Personnes']} pers.)",
+            "start": pd.to_datetime(row["Début"]).date().isoformat(),
+            "end": (pd.to_datetime(row["Fin"]).date() + pd.Timedelta(days=1)).isoformat(),
+            "backgroundColor": row["Couleur"],
+            "borderColor": row["Couleur"],
+            "textColor": "#FFFFFF",
+            "allDay": True
+        })
+
+col1, col2 = st.columns([3, 1])
+
+with col1:
+    st.subheader("📅 Planning")
+    
+    calendar_options = {
+        "headerToolbar": {
+            "left": "prev,next today",
+            "center": "title",
+            "right": "dayGridMonth"
+        },
+        "initialView": "dayGridMonth",
+    }
+
+    calendar(events=calendar_events, options=calendar_options)
+
+with col2:
+    st.subheader("📊 Résumé")
+
+    if not df.empty:
+        st.write(f"Total réservations : {len(df)}")
+        st.dataframe(df, use_container_width=True)
+    else:
+        st.info("Aucune réservation")
+
 st.markdown("---")
 st.subheader("✏️ Modifier / Supprimer")
 
@@ -129,44 +172,3 @@ if "edit_index" in st.session_state:
         st.success("Modifié !")
         del st.session_state.edit_index
         st.cache_data.clear()
-
-# ------------------ CALENDRIER ------------------
-
-calendar_events = []
-
-if not df.empty:
-    for _, row in df.iterrows():
-        calendar_events.append({
-            "title": f"{row['Membre']} ({row['Personnes']} pers.)",
-            "start": pd.to_datetime(row["Début"]).date().isoformat(),
-            "end": (pd.to_datetime(row["Fin"]).date() + pd.Timedelta(days=1)).isoformat(),
-            "backgroundColor": row["Couleur"],
-            "borderColor": row["Couleur"],
-            "textColor": "#FFFFFF",
-            "allDay": True
-        })
-
-col1, col2 = st.columns([3, 1])
-
-with col1:
-    st.subheader("📅 Planning")
-    
-    calendar_options = {
-        "headerToolbar": {
-            "left": "prev,next today",
-            "center": "title",
-            "right": "dayGridMonth"
-        },
-        "initialView": "dayGridMonth",
-    }
-
-    calendar(events=calendar_events, options=calendar_options)
-
-with col2:
-    st.subheader("📊 Résumé")
-
-    if not df.empty:
-        st.write(f"Total réservations : {len(df)}")
-        st.dataframe(df, use_container_width=True)
-    else:
-        st.info("Aucune réservation")
