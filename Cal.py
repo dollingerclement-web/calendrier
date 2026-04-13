@@ -6,7 +6,7 @@ from streamlit_calendar import calendar
 
 st.set_page_config(layout="wide")
 st.title("🏡 Gestion de la Maison Familiale")
-
+st.write(st.secrets)
 # ------------------ CONNEXION GOOGLE SHEETS ------------------
 
 @st.cache_resource
