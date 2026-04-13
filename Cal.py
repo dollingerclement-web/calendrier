@@ -120,7 +120,7 @@ if not df.empty:
             "backgroundColor": row["Couleur"],
             "borderColor": row["Couleur"],
             "textColor": "#000000",
-            "allDay": True
+            "allDay": True,
             "initialDate": st.session_state.get("focus_date", today).isoformat()
         })
 
