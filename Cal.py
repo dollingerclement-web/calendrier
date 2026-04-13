@@ -5,7 +5,8 @@ from oauth2client.service_account import ServiceAccountCredentials
 from streamlit_calendar import calendar
 
 st.set_page_config(layout="wide")
-st.title("🏡 Gestion de la Maison Familiale")
+st.title("🏡 Planning de la chirouze")
+st.caption("Avant toute réservation merci d'envoyer une demande sur le groupe whats'app , priorité à la famille et aux anciens ;)")
 
 # ------------------ CONNEXION GOOGLE SHEETS ------------------
 
