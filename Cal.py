@@ -52,7 +52,7 @@ with col2:
 with col3:
     nb_en = st.number_input("Enfants", 1, 15, 2)
 
-nb_pers=nb_as+nb_en
+nb_pers=nb_ad+nb_en
 
 with col4:
     couleur = st.color_picker("Couleur", "#3D91FF")
